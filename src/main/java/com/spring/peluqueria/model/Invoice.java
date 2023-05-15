@@ -14,7 +14,6 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;

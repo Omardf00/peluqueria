@@ -1,5 +1,6 @@
 package com.spring.peluqueria.controller;
 
+import com.spring.peluqueria.dto.ClientResponse;
 import com.spring.peluqueria.model.Client;
 import com.spring.peluqueria.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,20 @@ public class ClientController {
     @Autowired
     ClientService clientService;
 
+
     @GetMapping
     public ResponseEntity<?> getAllClients(){
 
         List<Client> clients = new ArrayList<>();
+        List<ClientResponse> clientResponseList = new ArrayList<>();
         Map<String, Object> response = new HashMap<>();
 
         try {
             clients = clientService.findAll();
+            for (Client client : clients){
+                ClientResponse clientResponse = new ClientResponse(client);
+                clientResponseList.add(clientResponse);
+            }
         } catch (DataAccessException e){
             response.put("error", "There was a problem trying to access to the data base");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -35,7 +42,7 @@ public class ClientController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+        return new ResponseEntity<>(clientResponseList, HttpStatus.OK);
     }
 
 }
